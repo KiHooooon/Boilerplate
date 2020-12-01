@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import FileUpload from '../../utils/FileUpload';
 import { Typography, Button, Form, Input } from 'antd';
 const { TextArea } = Input;
@@ -13,7 +14,7 @@ const Continents = [
     { key: 7, value: "Antarctica" }
 ]
 
-function UploadProductPage() {
+function UploadProductPage(props) {
     const [Title, setTitle] = useState("");
     const [Description, setDescription] = useState("");
     const [Price, setPrice] = useState(0);
@@ -32,16 +33,43 @@ function UploadProductPage() {
     const continentChangeHandler = (event) => {
         setContinent(event.currentTarget.value);
     }
+    const updateImages = (newImages) => {
+        setImages(newImages)
+    }
+    const submitHandler = (event) => {
+        event.preventDefault();
 
+        if(!Title || !Description || !Price || !Continent || !Images) {
+            return alert('모든 값을 넣어주세요');
+        }
+        const body = {
+            writer: props.user.userData._id,
+            title: Title,
+            description: Description,
+            price: Price,
+            continent: Continent,
+            images: Images
+        }
+        // 서버에 채운 값들을 request로 보낸다
+        axios.post('/api/product', body)
+            .then(response => {
+                if(response.data.success) {
+                    alert('상품 저장 완료');
+                    props.history.push('/');
+                } else {
+                    alert('상품 저장 실패');
+                }
+            })
+    }
     return (
         <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
                 <h2> 여행 상품 업로드</h2>
             </div>
 
-            <Form>
+            <Form onSubmit={submitHandler}>
                 {/* DropZone */}
-                <FileUpload />
+                <FileUpload refreshFunction={updateImages}/>
 
                 <br />
                 <br />

@@ -1,0 +1,9 @@
+﻿2020-11-29 01:42:36> Program: Starting Squirrel Updater: --createShortcut=Postman.exe
+2020-11-29 01:42:36> ApplyReleasesImpl: About to create shortcuts for Postman.exe, rootAppDir C:\Users\H\AppData\Local\Postman
+2020-11-29 01:42:36> ApplyReleasesImpl: Creating shortcut for Postman.exe => C:\Users\H\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Postman\Postman.lnk
+2020-11-29 01:42:36> ApplyReleasesImpl: About to save shortcut: C:\Users\H\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Postman\Postman.lnk (target C:\Users\H\AppData\Local\Postman\Postman.exe, workingDir C:\Users\H\AppData\Local\Postman\app-7.36.0, args , toastActivatorCSLID d56d0ae8-2c2a-5b45-bd3b-9973bc69da9e)
+2020-11-29 01:42:37> ApplyReleasesImpl: Creating shortcut for Postman.exe => C:\Users\H\Desktop\Postman.lnk
+2020-11-29 01:42:37> ApplyReleasesImpl: About to save shortcut: C:\Users\H\Desktop\Postman.lnk (target C:\Users\H\AppData\Local\Postman\Postman.exe, workingDir C:\Users\H\AppData\Local\Postman\app-7.36.0, args , toastActivatorCSLID d56d0ae8-2c2a-5b45-bd3b-9973bc69da9e)
+2020-11-29 01:42:37> ApplyReleasesImpl: Examining Pin: File Explorer.lnk
+2020-11-29 01:42:37> ApplyReleasesImpl: Examining Pin: Visual Studio Code.lnk
+2020-11-29 01:42:37> ApplyReleasesImpl: Examining Pin: 카카오톡.lnk
