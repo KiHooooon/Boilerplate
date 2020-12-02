@@ -5,24 +5,50 @@ import axios from 'axios';
 import { Icon, Col, Card, Row, Carousel } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 function LandingPage() {
+
     const [Products, setProducts] = useState([]);
+    const [Skip, setSkip] = useState(0);
+    const [Limit, setLimit] = useState(8);
+    const [PostSize, setPostSize] = useState(0);
+
     useEffect(() => {
-        axios.post('api/product/products')
+        let body = {
+            skip: Skip,
+            limit: Limit
+        }
+        getProducts(body);
+    }, [])
+
+    const loadMoreHanlder = () => {
+        let skip = Skip + Limit
+        
+        let body = {
+            skip: skip,
+            limit: Limit,
+            loadMore: true
+        }
+        getProducts(body);
+        setSkip(skip);
+    }
+
+    const getProducts = (body) => {       
+        axios.post('api/product/products', body)
             .then(response => {
                 if(response.data.success) {
                     console.log(response.data);
-                    setProducts(response.data.products);
+                    if(body.loadMore) {
+                        setProducts([...Products, ...response.data.products]);
+                    } else {
+                        setProducts(response.data.products);
+                    }
+                    setPostSize(response.data.postSize);
                 } else {
+                    alert('상품을 가져오는데 실패했습니다.')
                     console.log(response.data.err);
                 }
-            })
-
-        
-    }, [])
-
-    
+            })  
+    }
     const renderCards = Products.map((product, index) => {
-
         return (
             <Col lg={6} md={8} xs={24} key={index}>
                 <Card
@@ -36,15 +62,22 @@ function LandingPage() {
             </Col>
         )
     })
+
     return (
         <div style={{ width: '75%', margin: '3rem auto' }}>
             <div style={{ textAlign: 'center' }}>
                 <h2>Let's Travel Anywhere <Icon type="rocket" /> </h2>
             </div>
         
-            <Row gutter={16, 16}>
+            <Row gutter={[16, 16]}>
                 {renderCards}
             </Row>
+            
+            {PostSize >= Limit &&
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <button onClick={loadMoreHanlder}>더보기</button>
+                </div>
+            }
         </div>
     )
 }

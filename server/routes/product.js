@@ -35,11 +35,20 @@ router.post('/', (req, res) => {
 })
 
 router.post('/products', (req, res) => {
+  let limit = req.body.limit ? parseInt(req.body.limit) : 8;
+  let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+
   Product.find()
     .populate('writer')
+    .skip(skip)
+    .limit(limit)
     .exec((err, products) => {
       if(err) return res.status(400).json({success: false, err})
-      res.status(200).json({success: true, products})
+      res.status(200).json({
+        success: true,
+        products,
+        postSize: products.length
+      })
     })
 })
 
