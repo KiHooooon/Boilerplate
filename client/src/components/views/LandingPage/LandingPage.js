@@ -5,7 +5,8 @@ import axios from 'axios';
 import { Icon, Col, Card, Row, Carousel } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import CheckBox from './Sections/CheckBox';
-import { continents } from './Sections/Datas'
+import RadioBox from './Sections/RadioBox';
+import { continents, price } from './Sections/Datas'
 
 function LandingPage() {
 
@@ -79,10 +80,31 @@ function LandingPage() {
         getProducts(body);
         setSkip(0);
     }
+
+    const handlePrice = (value) => {
+        const data = price;
+        let array = [];
+
+        for(let key in data) {
+            if(data[key]._id === parseInt(value, 10)) {
+                console.log(data[key].array);
+                array = data[key].array;
+            }
+        }
+        console.log(array);
+        return array;
+    }
+
     const handleFilters = (filters, category) => {
         const newFilters = {...Filters};
-        newFilters[category] = filters;
+        if(category === 'price') {
+            let priceValues = handlePrice(filters);
+            newFilters[category] = priceValues;
+        } else {
+            newFilters[category] = filters;
+        }
         showFilteredResults(newFilters);
+        setFilters(newFilters);
     }
 
     return (
@@ -91,10 +113,17 @@ function LandingPage() {
                 <h2>Let's Travel Anywhere <Icon type="rocket" /> </h2>
             </div>
 
-            {/* CheckBox */}
-            <CheckBox list={continents} handleFilters={filters => handleFilters(filters, 'continents')}/>
-            {/* RaidoBox */}
-
+            <Row gutter={[16, 16]} xs={24}>
+                <Col lg={12}>
+                    {/* CheckBox */}
+                    <CheckBox list={continents} handleFilters={filters => handleFilters(filters, 'continents')}/>
+                </Col>
+                <Col lg={12} xs={24}>
+                    {/* RaidoBox */}
+                    <RadioBox list={price} handleFilters={filters => handleFilters(filters, 'price')}/>
+                </Col>
+            </Row>
+            
             <Row gutter={[16, 16]}>
                 {renderCards}
             </Row>
