@@ -6,6 +6,7 @@ import { Icon, Col, Card, Row, Carousel } from 'antd';
 import Meta from 'antd/lib/card/Meta';
 import CheckBox from './Sections/CheckBox';
 import RadioBox from './Sections/RadioBox';
+import SearchFeature from './Sections/SearchFeature';
 import { continents, price } from './Sections/Datas'
 
 function LandingPage() {
@@ -18,6 +19,7 @@ function LandingPage() {
         continents: [],
         price: []
     })
+    const [SearchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         let body = {
@@ -107,14 +109,27 @@ function LandingPage() {
         setFilters(newFilters);
     }
 
+    const updateSearchTerm = (newSearchTerm) => {
+        
+        let body = {
+            skip: 0,
+            limit: Limit,
+            filters: Filters,
+            searchTerm: newSearchTerm
+        }
+        setSkip(0)
+        setSearchTerm(newSearchTerm);
+        getProducts(body)
+    }
+
     return (
         <div style={{ width: '75%', margin: '3rem auto' }}>
             <div style={{ textAlign: 'center' }}>
                 <h2>Let's Travel Anywhere <Icon type="rocket" /> </h2>
             </div>
 
-            <Row gutter={[16, 16]} xs={24}>
-                <Col lg={12}>
+            <Row gutter={[16, 16]}>
+                <Col lg={12} xs={24}>
                     {/* CheckBox */}
                     <CheckBox list={continents} handleFilters={filters => handleFilters(filters, 'continents')}/>
                 </Col>
@@ -123,7 +138,11 @@ function LandingPage() {
                     <RadioBox list={price} handleFilters={filters => handleFilters(filters, 'price')}/>
                 </Col>
             </Row>
-            
+            <div style={{display: 'flex', justifyContent: 'flex-end', margin: '1rem auto'}}>
+                <SearchFeature
+                    refreshFunction={updateSearchTerm}
+                />
+            </div>
             <Row gutter={[16, 16]}>
                 {renderCards}
             </Row>
