@@ -78,39 +78,41 @@ router.post("/addToCart", auth, (req, res) => {
                 duplicate = true;
             }
         });
-    })
-    // 상품이 이미 있을때
-    if(duplicate) {
-        User.findOneAndUpdate(
-            {_id: req.user._id, "cart.id" : req.body.productId},
-            {$inc: {"cart.$.quantity": 1}},
-            {new: true},
-            (err, userInfo) => {
-                if(err) return res.status(400).json({success: false, err })
-                return res.status(200).send(userInfo.cart)
-            }
-        )
-    } 
-    // 상품이 이미 있지 않을때
-    else {
-        User.findOneAndUpdate(
-            {_id: req.user._id},
-            {
-                $push: {
-                    cart: {
-                        id: req.body.productId,
-                        quantity: 1,
-                        date: Date.now()
-                    }
+
+        // 상품이 이미 있을때
+        if(duplicate) {
+            User.findOneAndUpdate(
+                {_id: req.user._id, "cart.id" : req.body.productId},
+                {$inc: {"cart.$.quantity": 1}},
+                {new: true},
+                (err, userInfo) => {
+                    if(err) return res.status(400).json({success: false, err })
+                    return res.status(200).send(userInfo.cart)
                 }
-            },
-            {new: true},
-            (err, userInfo) => {
-                if(err) return res.status(400).json({success: false, err})
-                res.status(200).send(userInfo.cart);
-            }
-        )
-    }
+            )
+        } 
+        // 상품이 이미 있지 않을때
+        else {
+            console.log('333333333333333');
+            User.findOneAndUpdate(
+                {_id: req.user._id},
+                {
+                    $push: {
+                        cart: {
+                            id: req.body.productId,
+                            quantity: 1,
+                            date: Date.now()
+                        }
+                    }
+                },
+                {new: true},
+                (err, userInfo) => {
+                    if(err) return res.status(400).json({success: false, err})
+                    res.status(200).send(userInfo.cart);
+                }
+            )
+        }
+    })
 });
 
 module.exports = router;
