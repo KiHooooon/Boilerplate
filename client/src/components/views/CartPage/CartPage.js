@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import {useDispatch} from 'react-redux';
-import {getCartItems} from '../../../_actions/user_actions';
+import {getCartItems, removeCartItem} from '../../../_actions/user_actions';
 import UserCardBlock from './Sections/UserCardBlock';
+import { Empty, Result } from 'antd';
 
 function CartPage(props) {
     const [Total, setTotal] = useState(0);
     const dispatch = useDispatch();
-    
+    const [ShowTotal, setShowTotal] = useState(false);
+
     useEffect(() => {
         let cartItems = []
         // 리덕스 User State안에 cart안에 상품이 들어있는지 확인
@@ -29,14 +31,32 @@ function CartPage(props) {
             total += parseInt(item.price, 10) * item.quantity;
         })
         setTotal(total)
+        setShowTotal(true)
+    }
+
+    const removeFromCart = (productId) => {
+        dispatch(removeCartItem(productId))
+            .then(response => {
+                if(response.payload.productInfo.length === 0) {
+                    setShowTotal(false)
+                }
+            })
     }
     return (
         <div style={{ width: '85%', margin: '3rem auto' }}>
-            CartPage
-            <UserCardBlock products={props.user.cartDetail}/>
-            <div style={{ marginTop: '3rem' }}>
-                <h2>Total Amount: ${Total}</h2>
-            </div>
+            <h1>My Cart</h1>
+            <UserCardBlock products={props.user.cartDetail} removeItem={removeFromCart}/>
+
+            {ShowTotal ?
+                <div style={{ marginTop: '3rem' }}>
+                    <h2>Total Amount: ${Total}</h2>
+                </div>
+                : 
+                <>
+                    <br />
+                    <Empty description={false} />
+                </>
+            }
         </div>
         
     )
