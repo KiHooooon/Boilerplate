@@ -95,7 +95,6 @@ router.post("/addToCart", auth, (req, res) => {
         } 
         // 상품이 이미 있지 않을때
         else {
-            console.log('333333333333333');
             User.findOneAndUpdate(
                 {_id: req.user._id},
                 {
